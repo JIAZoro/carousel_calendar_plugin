@@ -73,34 +73,32 @@ class _CalendarCarouselWidgetState extends State<CalendarCarouselWidget> {
       _pageController.jumpToPage(index);
     }
     return Stack(children: [
-      Container(
-        height: 200,
-        color: Colors.blue,
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (scrollNotification) {
-            if (scrollNotification is ScrollStartNotification) {
-              // print("滚动开始▶️");
-            } else if (scrollNotification is ScrollUpdateNotification) {
-              // print("滚动更新");
-            } else if (scrollNotification is ScrollEndNotification) {
-              // print("滚动停止⏹");
-              if (_lastRetuenIndex != _currentPageIndex) {
-                if (widget.currentIndex != null) {
-                  widget.currentIndex(_currentPageIndex);
-                  _lastRetuenIndex = _currentPageIndex;
-                }
+      NotificationListener<ScrollNotification>(
+        onNotification: (scrollNotification) {
+          if (scrollNotification is ScrollStartNotification) {
+            // print("滚动开始▶️");
+          } else if (scrollNotification is ScrollUpdateNotification) {
+            // print("滚动更新");
+          } else if (scrollNotification is ScrollEndNotification) {
+            // print("滚动停止⏹");
+            // 停止滚动的时候进行判断，是否与上次的返回数据一样，一样的话就不用重复返回了
+            // 重复的话就返回数据
+            if (_lastRetuenIndex != _currentPageIndex) {
+              if (widget.currentIndex != null) {
+                widget.currentIndex(_currentPageIndex);
+                _lastRetuenIndex = _currentPageIndex;
               }
             }
-            return false;
+          }
+          return false;
+        },
+        child: PageView.builder(
+          onPageChanged: _pageChange,
+          controller: _pageController,
+          itemBuilder: (context, index) {
+            return widget.itemBuilder(context, index);
           },
-          child: PageView.builder(
-            onPageChanged: _pageChange,
-            controller: _pageController,
-            itemBuilder: (context, index) {
-              return widget.itemBuilder(context, index);
-            },
-            itemCount: widget.dataSource.length,
-          ),
+          itemCount: widget.dataSource.length,
         ),
       ),
       Positioned(

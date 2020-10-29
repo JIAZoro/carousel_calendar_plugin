@@ -1,0 +1,22 @@
+PODS:
+  - carousel_calendar_plugin (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - carousel_calendar_plugin (from `.symlinks/plugins/carousel_calendar_plugin/ios`)
+  - Flutter (from `Flutter`)
+
+EXTERNAL SOURCES:
+  carousel_calendar_plugin:
+    :path: ".symlinks/plugins/carousel_calendar_plugin/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  carousel_calendar_plugin: 8b83a2100aa5392edcad0ee504199ab2ee0f593c
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.9.3

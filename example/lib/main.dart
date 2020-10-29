@@ -56,20 +56,25 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: CalendarCarouselWidget(
-          dataSource: _dataArray,
-          viewportFraction: 0.15,
-          initPageIndex: 3,
-          itemBuilder: (context, index) {
-            return _buildPageViewItem(_dataArray[index]);
-          },
-          currentIndex: (value) {
-            print("当前index：$value");
-          },
+        body: Container(
+          height: 200,
+          color: Colors.grey,
+          child: CalendarCarouselWidget(
+            dataSource: _dataArray,
+            viewportFraction: 0.15,
+            initPageIndex: 3,
+            itemBuilder: (context, index) {
+              return _buildPageViewItem(_dataArray[index]);
+            },
+            currentIndex: (value) {
+              print("当前index：$value");
+            },
+          ),
         ),
       ),
     );
   }
+
   _buildPageViewItem(Map dataMap) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
