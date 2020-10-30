@@ -16,10 +16,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   List _dataArray = [];
+
+  PageController _pageController;
+
   @override
   void initState() {
     super.initState();
     initPlatformState();
+    _pageController = PageController(initialPage: 1, viewportFraction: 0.15);
     _dataArray = [
       {"date": "2020-09-26", "value": 0.8},
       {"date": "2020-09-27", "value": 0.9},
@@ -60,10 +64,12 @@ class _MyAppState extends State<MyApp> {
           height: 200,
           color: Colors.grey,
           child: CalendarCarouselWidget(
+            pageController: _pageController,
             dataSource: _dataArray,
-            viewportFraction: 0.15,
-            initPageIndex: 3,
-            itemBuilder: (context, index) {
+            itemBuilder: (context, index, highlight) {
+              if (highlight) {
+                return _buildPageViewItem(_dataArray[index], highlight: true);
+              }
               return _buildPageViewItem(_dataArray[index]);
             },
             currentIndex: (value) {
@@ -75,7 +81,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  _buildPageViewItem(Map dataMap) {
+  _buildPageViewItem(Map dataMap, {bool highlight = false}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
       child: Column(
@@ -84,7 +90,7 @@ class _MyAppState extends State<MyApp> {
         children: [
           Text(
             dataMap['date'].toString().replaceAll("2020-", ""),
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: highlight ? Colors.white : Colors.white12),
           ),
           Container(
             width: 20,

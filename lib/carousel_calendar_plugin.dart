@@ -18,24 +18,26 @@ class CalendarCarouselWidget extends StatefulWidget {
   CalendarCarouselWidget(
       {Key key,
       this.dataSource,
-      this.initPageIndex,
-      this.viewportFraction,
+      // this.viewportFraction,
       this.currentIndex,
+      @required this.pageController,
       @required this.itemBuilder})
       : super(key: key);
 
   /// 视图数据
   final List dataSource;
 
-  /// 初始化显示哪个页面
-  final int initPageIndex;
+  // /// 初始化显示哪个页面
+  // final int initPageIndex;
 
   /// 显示宽度
   /// 为屏幕宽度的 * 0.2这种
-  final double viewportFraction;
+  // final double viewportFraction;
 
-  /// 自定义item
-  IndexedWidgetBuilder itemBuilder;
+  final PageController pageController;
+
+  /// 自定义item, highLight: 当前选中的高亮
+  Function(BuildContext context, int index, bool highLight) itemBuilder;
 
   ///  返回当前index
   ValueChanged currentIndex;
@@ -45,33 +47,21 @@ class CalendarCarouselWidget extends StatefulWidget {
 }
 
 class _CalendarCarouselWidgetState extends State<CalendarCarouselWidget> {
-  PageController _pageController;
-
-  String _lastDate = ""; // 存储上次page的索引
   int _lastRetuenIndex = 0; // 存储上次返回的pageIndex数据
   int _currentPageIndex = 0; // 存储当前pageIndex
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _pageController = PageController(
-        viewportFraction: widget.viewportFraction,
-        initialPage: widget.initPageIndex ?? 0);
+    _currentPageIndex = widget.pageController.initialPage;
   }
 
   _pageChange(index) {
-    _lastDate = widget.dataSource[index]['date'];
     _currentPageIndex = index;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_pageController != null && _lastDate.length > 0) {
-      int index = widget.dataSource
-          .lastIndexWhere((element) => element['date'] == _lastDate);
-      print("跳转到----$index \n ");
-      _pageController.jumpToPage(index);
-    }
     return Stack(children: [
       NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
@@ -86,7 +76,9 @@ class _CalendarCarouselWidgetState extends State<CalendarCarouselWidget> {
             if (_lastRetuenIndex != _currentPageIndex) {
               if (widget.currentIndex != null) {
                 widget.currentIndex(_currentPageIndex);
-                _lastRetuenIndex = _currentPageIndex;
+                setState(() {
+                  _lastRetuenIndex = _currentPageIndex;
+                });
               }
             }
           }
@@ -94,9 +86,10 @@ class _CalendarCarouselWidgetState extends State<CalendarCarouselWidget> {
         },
         child: PageView.builder(
           onPageChanged: _pageChange,
-          controller: _pageController,
+          controller: widget.pageController,
           itemBuilder: (context, index) {
-            return widget.itemBuilder(context, index);
+            return widget.itemBuilder(
+                context, index, _currentPageIndex == index);
           },
           itemCount: widget.dataSource.length,
         ),
