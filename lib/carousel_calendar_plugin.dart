@@ -61,6 +61,12 @@ class _CalendarCarouselWidgetState extends State<CalendarCarouselWidget> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(children: [
       NotificationListener<ScrollNotification>(
